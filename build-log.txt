@@ -1,0 +1,11 @@
+mkdir -p build
+as --32 boot/boot.s -o build/boot.o
+gcc -m32 -std=gnu11 -ffreestanding -fno-pie -fno-stack-protector -fno-builtin -fno-asynchronous-unwind-tables -fno-unwind-tables -Wall -Wextra -O2 -Iinclude -c kernel/kernel.c -o build/kernel.o
+gcc -m32 -std=gnu11 -ffreestanding -fno-pie -fno-stack-protector -fno-builtin -fno-asynchronous-unwind-tables -fno-unwind-tables -Wall -Wextra -O2 -Iinclude -c drivers/vga.c -o build/vga.o
+gcc -m32 -std=gnu11 -ffreestanding -fno-pie -fno-stack-protector -fno-builtin -fno-asynchronous-unwind-tables -fno-unwind-tables -Wall -Wextra -O2 -Iinclude -c drivers/serial.c -o build/serial.o
+gcc -m32 -std=gnu11 -ffreestanding -fno-pie -fno-stack-protector -fno-builtin -fno-asynchronous-unwind-tables -fno-unwind-tables -Wall -Wextra -O2 -Iinclude -c drivers/keyboard.c -o build/keyboard.o
+ld -m elf_i386 -T linker.ld -o build/kernel.elf build/boot.o build/kernel.o build/vga.o build/serial.o build/keyboard.o
+ld: warning: build/boot.o: missing .note.GNU-stack section implies executable stack
+ld: NOTE: This behaviour is deprecated and will be removed in a future version of the linker
+grub-file --is-x86-multiboot build/kernel.elf
+make: *** [Makefile:41: check] Error 1
